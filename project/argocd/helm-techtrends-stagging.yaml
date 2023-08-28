@@ -1,0 +1,26 @@
+## API endpoint used to create the Application resource
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+## Set the name of the resource and namespace where it should be deployed.
+metadata:
+  name: techtrends-staging 
+  namespace: argocd
+spec:
+  ## Set the target cluster and namespace to deploy the application.
+  destination:
+    namespace: techtrends-staging
+    server: https://kubernetes.default.svc
+  ## Set the project the application belongs to.
+  ## In this case the `default` project is used.
+  project: default
+  ## Define the source of the application manifests.
+  source:
+    helm:
+      valueFiles:
+      - values-staging.yaml
+    path: project/helm
+    repoURL: https://github.com/rogersacchelli/nd064_course_1
+    targetRevision: HEAD
+  # # Set the sync policy. 
+  ## If left empty, the sync policy will default to manual.
+  syncPolicy: {}
