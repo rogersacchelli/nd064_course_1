@@ -114,7 +114,11 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
+
+   stdout_handler = sys.stdout # STDOUT handler - Refered from https://knowledge.udacity.com/questions/914807
+   stderr_handler = sys.error # STDERR handler - Refered from https://knowledge.udacity.com/questions/914807
+   handlers = [stderr_handler, stdout_handler]
    logging.basicConfig(format='%(levelname)s:%(filename)s:%(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S,',\
-                        level=logging.DEBUG, stream=sys.stdout)
+                        level=logging.DEBUG, stream=handlers)
 
    app.run(host='0.0.0.0', port='3111')
