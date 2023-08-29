@@ -1,22 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "techtrends.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  labels:
+    app: techtrends
+    tag: latest
+  name: techtrends
+  namespace: {{ .Values.namespace.name }} 
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "techtrends.name" . }}
+      app: techtrends
+      tag: latest
   template:
     metadata:
       labels:
-        app: {{ include "techtrends.name" . }}
+        app: techtrends
+        tag: latest
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: techtrends
           ports:
             - containerPort: {{ .Values.containerPort }}
           resources:
