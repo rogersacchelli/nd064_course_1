@@ -10,7 +10,7 @@ metadata:
 spec:
   ## Set the target cluster and namespace to deploy the application.
   destination:
-    namespace: techtrends-prod
+    namespace: prod
     server: https://kubernetes.default.svc
   ## Set the project the application belongs to.
   ## In this case the `default` project is used.

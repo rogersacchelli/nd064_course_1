@@ -1,5 +1,5 @@
 namespace: 
-  name: techtrends-staging
+  name: staging
 
 service:
   port: 5111
