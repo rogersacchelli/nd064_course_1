@@ -1,8 +1,12 @@
 import sqlite3
 import logging
+import sys
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
+
+db_total_connections = 0
+
 
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
@@ -17,6 +21,8 @@ def get_post(post_id):
     post = connection.execute('SELECT * FROM posts WHERE id = ?',
                         (post_id,)).fetchone()
     connection.close()
+    global db_total_connections
+    db_total_connections += 1
     app.logger.debug('Metrics request successfull')
  
     return post
@@ -26,19 +32,9 @@ def get_post_count():
     connection = get_db_connection()
     post_count = connection.execute('SELECT count(*) from posts').fetchone()[0]
     connection.close()
+    global db_total_connections
+    db_total_connections += 1
     return post_count
-
-def get_connections():
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    cursor.execute('PRAGMA active_connections')
-    number_of_connections = cursor.fetchone()
-
-    if number_of_connections is None:
-        return 0
-    else:
-        return number_of_connections[0]
 
 
 # Define the Flask application
@@ -108,9 +104,8 @@ def healthz():
 @app.route('/metrics')
 def metrics():
     post_count = get_post_count()
-    number_of_connections = get_connections()
     response = app.response_class(
-            response=json.dumps({"db_connection_count":number_of_connections,"post_count":post_count}),
+            response=json.dumps({"db_connection_count":db_total_connections,"post_count":post_count}),
             status=200,
             mimetype='application/json'
     )
@@ -120,5 +115,6 @@ def metrics():
 # start the application on port 3111
 if __name__ == "__main__":
    logging.basicConfig(format='%(levelname)s:%(filename)s:%(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S,',\
-                        level=logging.DEBUG)
+                        level=logging.DEBUG, stream=sys.stdout)
+
    app.run(host='0.0.0.0', port='3111')
