@@ -4,7 +4,7 @@ kind: Application
 ## Set the name of the resource and namespace where it should be deployed.
 metadata:
   name: techtrends-staging 
-  namespace: argocd
+  namespace: techtrends-staging
 spec:
   ## Set the target cluster and namespace to deploy the application.
   destination:
