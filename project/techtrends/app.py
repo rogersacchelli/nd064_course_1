@@ -115,10 +115,19 @@ def metrics():
 # start the application on port 3111
 if __name__ == "__main__":
 
-   stdout_handler = sys.stdout # STDOUT handler - Refered from https://knowledge.udacity.com/questions/914807
-   stderr_handler = sys.error # STDERR handler - Refered from https://knowledge.udacity.com/questions/914807
-   handlers = [stderr_handler, stdout_handler]
-   logging.basicConfig(format='%(levelname)s:%(filename)s:%(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S,',\
-                        level=logging.DEBUG, stream=handlers)
+   # Logging implementation from https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
+   logger = logging.getLogger('')
+   logger.setLevel(logging.WARNING)
 
+   formatter = logging.Formatter('%(levelname)s:%(filename)s:%(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S,')
+
+   stdout_handler = logging.StreamHandler(sys.stdout)
+   stderr_handler = logging.StreamHandler(sys.stderr)
+
+   stdout_handler.setFormatter(formatter)
+   stderr_handler.setFormatter(formatter)
+   logger.addHandler(stdout_handler)
+   logger.addHandler(stderr_handler)
+
+   # Start App
    app.run(host='0.0.0.0', port='3111')
