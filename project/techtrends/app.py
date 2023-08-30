@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
    # Logging implementation from https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
    logger = logging.getLogger('')
-   logger.setLevel(logging.WARNING)
+   logger.setLevel(logging.DEBUG)
 
    formatter = logging.Formatter('%(levelname)s:%(filename)s:%(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S,')
 
